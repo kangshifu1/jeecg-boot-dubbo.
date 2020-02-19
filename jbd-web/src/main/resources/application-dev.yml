@@ -96,7 +96,7 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://192.168.1.5:3308/jeecg_muti_maven?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+          url: jdbc:mysql://192.168.1.5:3308/jeecg_muti_maven?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true
           username: jeecg_muti_maven
           password: jeecg_muti_maven
           driver-class-name: com.mysql.jdbc.Driver
