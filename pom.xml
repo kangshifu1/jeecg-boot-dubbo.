@@ -20,8 +20,12 @@
     <modules>
         <module>jbd-common</module>
         <module>jbd-es</module>
-        <module>jbd-web</module>
-        <module>jdb-config</module>
+        <!--<module>jbd-web</module>-->
+        <module>jbd-config</module>
+        <module>jbd-provider</module>
+        <module>jbd-mapper</module>
+        <module>jbd-consumer</module>
+
     </modules>
 
     <distributionManagement>
@@ -68,6 +72,7 @@
         <aliyun-java-sdk-core.version>3.2.3</aliyun-java-sdk-core.version>
         <aliyun-java-sdk-dysmsapi.version>1.0.0</aliyun-java-sdk-dysmsapi.version>
         <aliyun.oss.version>3.6.0</aliyun.oss.version>
+        <dubbo.version>2.7.5</dubbo.version>
     </properties>
     <dependencies>
         <!--集成springmvc框架并实现自动配置 -->
@@ -192,24 +197,7 @@
             <version>3.7.0</version>
         </dependency>
 
-        <!--shiro-->
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring-boot-starter</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-        <!-- shiro-redis -->
-        <dependency>
-            <groupId>org.crazycake</groupId>
-            <artifactId>shiro-redis</artifactId>
-            <version>3.1.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.shiro</groupId>
-                    <artifactId>shiro-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
 
         <!-- Swagger API文档 -->
         <dependency>
@@ -243,21 +231,6 @@
             <artifactId>swagger-models</artifactId>
             <version>1.5.22</version>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-re</artifactId>
-            <version>5.2.13</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
 
         <!-- Redis -->
@@ -270,6 +243,7 @@
             <artifactId>commons-pool2</artifactId>
         </dependency>
 
+
         <!-- 代码生成器 -->
         <!-- 如果下载失败，看这个链接http://jeecg-boot.mydoc.io/?t=345672 -->
         <dependency>
@@ -277,7 +251,6 @@
             <artifactId>codegenerate</artifactId>
             <version>1.0.8</version>
         </dependency>
-
         <!-- AutoPoi Excel工具类-->
         <dependency>
             <groupId>org.jeecgframework</groupId>
