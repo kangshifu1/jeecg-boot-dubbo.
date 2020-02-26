@@ -5,22 +5,22 @@
     <parent>
         <artifactId>jbd-provider</artifactId>
         <groupId>org.jeecgframework.boot</groupId>
-        <version>2.1.3</version>
+        <version>2.1.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>system-provider-interface</artifactId>
-    <version>2.1.3</version>
+    <version>${jeecgboot.version}</version>
 <dependencies>
     <dependency>
         <groupId>org.jeecgframework.boot</groupId>
         <artifactId>jbd-config</artifactId>
-        <version>2.1.3</version>
+        <version>${jeecgboot.version}</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>org.jeecgframework.boot</groupId>
         <artifactId>jbd-mapper</artifactId>
-        <version>2.1.3</version>
+        <version>${jeecgboot.version}</version>
         <scope>compile</scope>
     </dependency>
 </dependencies>

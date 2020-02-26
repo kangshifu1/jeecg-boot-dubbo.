@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.modules.oss.entity.OSSFile;
@@ -45,6 +46,7 @@ public class OSSFileController {
 
 	@ResponseBody
 	@PostMapping("/upload")
+	@RequiresRoles("admin")
 	public Result upload(@RequestParam("file") MultipartFile multipartFile) {
 		Result result = new Result();
 		try {

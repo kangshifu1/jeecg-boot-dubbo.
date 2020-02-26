@@ -19,7 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @TableName("sys_announcement_send")
 public class SysAnnouncementSend implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
 	/**id*/
 	@TableId(type = IdType.ID_WORKER_STR)
 	private String id;
@@ -45,4 +45,17 @@ public class SysAnnouncementSend implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
+
+	/**
+	 * 业务id
+	 */
+	private java.lang.String busId;
+	/**
+	 * 打开方式 组件：component 路由：url
+	 */
+	private java.lang.String openType;
+	/**
+	 * 组件/路由 地址
+	 */
+	private java.lang.String openPage;
 }

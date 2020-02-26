@@ -1,12 +1,10 @@
 package org.jeecg.modules.system.controller;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.springframework.data.redis.core.RedisTemplate;
+import org.jeecg.common.util.RedisUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -74,6 +72,8 @@ public class SysDictController {
 	@Reference(version = "${ksf.service.version}")
 	private ISysDictItemService sysDictItemService;
 
+	@Autowired
+	public RedisTemplate<String, Object> redisTemplate;
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Result<IPage<SysDict>> queryPageList(SysDict sysDict,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,HttpServletRequest req) {
@@ -227,7 +227,6 @@ public class SysDictController {
 		}else {
 			sysDict.setUpdateTime(new Date());
 			boolean ok = sysDictService.updateById(sysDict);
-			//TODO 返回false说明什么？
 			if(ok) {
 				result.success("编辑成功!");
 			}
@@ -270,12 +269,29 @@ public class SysDictController {
 		}
 		return result;
 	}
+	/**
+	 * @功能：刷新缓存
+	 * @return
+	 */
+	@RequestMapping(value = "/refleshCache")
+	public Result<?> refleshCache() {
+		Result<?> result = new Result<SysDict>();
+		//清空字典缓存
+		Set keys = redisTemplate.keys(CacheConstant.SYS_DICT_CACHE + "*");
+		Set keys2 = redisTemplate.keys(CacheConstant.SYS_DICT_TABLE_CACHE + "*");
+		Set keys3 = redisTemplate.keys(CacheConstant.SYS_DEPARTS_CACHE + "*");
+		Set keys4 = redisTemplate.keys(CacheConstant.SYS_DEPART_IDS_CACHE + "*");
+		redisTemplate.delete(keys);
+		redisTemplate.delete(keys2);
+		redisTemplate.delete(keys3);
+		redisTemplate.delete(keys4);
+		return result;
+	}
 
 	/**
 	 * 导出excel
 	 *
 	 * @param request
-	 * @param response
 	 */
 	@RequestMapping(value = "/exportXls")
 	public ModelAndView exportXls(SysDict sysDict,HttpServletRequest request) {

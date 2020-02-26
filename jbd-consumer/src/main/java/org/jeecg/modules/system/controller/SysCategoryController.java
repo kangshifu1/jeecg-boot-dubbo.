@@ -250,7 +250,7 @@ public class SysCategoryController {
               }
           }
       }
-      return Result.ok("文件导入失败！");
+      return Result.error("文件导入失败！");
   }
   
   

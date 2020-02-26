@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.dubbo.config.annotation.Reference;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.exception.JeecgBootException;
@@ -84,6 +85,7 @@ public class QuartzJobController {
 	 * @param quartzJob
 	 * @return
 	 */
+	@RequiresRoles("admin")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result<?> add(@RequestBody QuartzJob quartzJob) {
 		List<QuartzJob> list = quartzJobService.findByJobClassName(quartzJob.getJobClassName());
@@ -100,6 +102,7 @@ public class QuartzJobController {
 	 * @param quartzJob
 	 * @return
 	 */
+	@RequiresRoles("admin")
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
 	public Result<?> eidt(@RequestBody QuartzJob quartzJob) {
 		try {
@@ -117,6 +120,7 @@ public class QuartzJobController {
 	 * @param id
 	 * @return
 	 */
+	@RequiresRoles("admin")
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public Result<?> delete(@RequestParam(name = "id", required = true) String id) {
 		QuartzJob quartzJob = quartzJobService.getById(id);
@@ -134,6 +138,7 @@ public class QuartzJobController {
 	 * @param ids
 	 * @return
 	 */
+	@RequiresRoles("admin")
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
 	public Result<?> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
 		if (ids == null || "".equals(ids.trim())) {
@@ -152,6 +157,7 @@ public class QuartzJobController {
 	 * @param job
 	 * @return
 	 */
+	@RequiresRoles("admin")
 	@GetMapping(value = "/pause")
 	@ApiOperation(value = "暂停定时任务")
 	public Result<Object> pauseJob(@RequestParam(name = "jobClassName", required = true) String jobClassName) {
@@ -176,6 +182,7 @@ public class QuartzJobController {
 	 * @param job
 	 * @return
 	 */
+	@RequiresRoles("admin")
 	@GetMapping(value = "/resume")
 	@ApiOperation(value = "恢复定时任务")
 	public Result<Object> resumeJob(@RequestParam(name = "jobClassName", required = true) String jobClassName) {

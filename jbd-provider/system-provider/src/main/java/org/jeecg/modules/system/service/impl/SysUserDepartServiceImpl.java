@@ -13,10 +13,11 @@ import org.jeecg.modules.system.service.ISysDepartService;
 import org.jeecg.modules.system.service.ISysUserDepartService;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <P>
@@ -92,5 +93,34 @@ public class SysUserDepartServiceImpl extends ServiceImpl<SysUserDepartMapper, S
 		}
 		return new ArrayList<SysUser>();
 	}
-	
+
+	/**
+	 * 根据部门code，查询当前部门和下级部门的 用户信息
+	 */
+	@Override
+	public List<SysUser> queryUserByDepCode(String depCode) {
+		LambdaQueryWrapper<SysDepart> queryByDepCode = new LambdaQueryWrapper<SysDepart>();
+		queryByDepCode.likeRight(SysDepart::getOrgCode,depCode);
+		List<SysDepart> sysDepartList = sysDepartService.list(queryByDepCode);
+		List<String> depIds = sysDepartList.stream().map(SysDepart::getId).collect(Collectors.toList());
+
+		LambdaQueryWrapper<SysUserDepart> queryUDep = new LambdaQueryWrapper<SysUserDepart>();
+		queryUDep.in(SysUserDepart::getDepId, depIds);
+		List<String> userIdList = new ArrayList<>();
+		List<SysUserDepart> uDepList = this.list(queryUDep);
+		if(uDepList != null && uDepList.size() > 0) {
+			for(SysUserDepart uDep : uDepList) {
+				userIdList.add(uDep.getUserId());
+			}
+			List<SysUser> userList = (List<SysUser>) sysUserService.listByIds(userIdList);
+			//update-begin-author:taoyan date:201905047 for:接口调用查询返回结果不能返回密码相关信息
+			for (SysUser sysUser : userList) {
+				sysUser.setSalt("");
+				sysUser.setPassword("");
+			}
+			//update-end-author:taoyan date:201905047 for:接口调用查询返回结果不能返回密码相关信息
+			return userList;
+		}
+		return new ArrayList<SysUser>();
+	}
 }

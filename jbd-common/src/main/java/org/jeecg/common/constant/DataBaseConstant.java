@@ -8,7 +8,12 @@ public interface DataBaseConstant {
 	public static final String DB_TYPE_ORACLE = "ORACLE";
 	public static final String DB_TYPE_POSTGRESQL = "POSTGRESQL";
 	public static final String DB_TYPE_SQLSERVER = "SQLSERVER";
-	
+
+	// 数据库类型，对应 database_type 字典
+	public static final String DB_TYPE_MYSQL_NUM = "1";
+	public static final String DB_TYPE_ORACLE_NUM = "2";
+	public static final String DB_TYPE_SQLSERVER_NUM = "3";
+	public static final String DB_TYPE_POSTGRESQL_NUM = "4";
 	//*********系统上下文变量****************************************
 	/**
 	 * 数据-所属机构编码
@@ -34,7 +39,7 @@ public interface DataBaseConstant {
 	 * 数据-系统用户编码（对应登录用户账号）
 	 */
 	public static final String SYS_USER_CODE_TABLE = "sys_user_code";
-	
+
 	/**
 	 * 登录用户真实姓名
 	 */
@@ -60,8 +65,8 @@ public interface DataBaseConstant {
 	 */
 	public static final String SYS_TIME_TABLE = "sys_time";
 	//*********系统上下文变量****************************************
-	
-	
+
+
 	//*********系统建表标准字段****************************************
 	/**
 	 * 创建者登录名称
@@ -95,7 +100,7 @@ public interface DataBaseConstant {
 	 * 更新日期时间
 	 */
 	public static final String UPDATE_TIME_TABLE = "update_time";
-	
+
 	/**
 	 * 业务流程状态
 	 */

@@ -1,5 +1,9 @@
 package org.jeecg.modules.system.service.impl;
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 
+import java.util.stream.Collectors;
+import org.jeecg.modules.system.vo.SysUserDepVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -87,11 +91,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	public boolean deleteUser(String userId) {
 		//1.删除用户
 		this.removeById(userId);
-		//2.删除用户部门关联关系
-		LambdaQueryWrapper<SysUserDepart> query = new LambdaQueryWrapper<SysUserDepart>();
-		query.eq(SysUserDepart::getUserId, userId);
-		sysUserDepartMapper.delete(query);
-		//3.删除用户角色关联关系
+//		//2.删除用户部门关联关系
+//		LambdaQueryWrapper<SysUserDepart> query = new LambdaQueryWrapper<SysUserDepart>();
+//		query.eq(SysUserDepart::getUserId, userId);
+//		sysUserDepartMapper.delete(query);
+//		//3.删除用户角色关联关系
 		//TODO
 		return false;
 	}
@@ -102,14 +106,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	public boolean deleteBatchUsers(String userIds) {
 		//1.删除用户
 		this.removeByIds(Arrays.asList(userIds.split(",")));
-		//2.删除用户部门关系
-		LambdaQueryWrapper<SysUserDepart> query = new LambdaQueryWrapper<SysUserDepart>();
-		for(String id : userIds.split(",")) {
-			query.eq(SysUserDepart::getUserId, id);
-			this.sysUserDepartMapper.delete(query);
-		}
-		//3.删除用户角色关系
-		//TODO
+//		//2.删除用户部门关系
+//		LambdaQueryWrapper<SysUserDepart> query = new LambdaQueryWrapper<SysUserDepart>();
+//		for(String id : userIds.split(",")) {
+//			query.eq(SysUserDepart::getUserId, id);
+//			this.sysUserDepartMapper.delete(query);
+//		}
+//		//3.删除用户角色关系
+//		//TODO
 		return false;
 	}
 
@@ -230,6 +234,26 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	public IPage<SysUser> getUserByDepId(Page<SysUser> page, String departId,String username) {
 		return userMapper.getUserByDepId(page, departId,username);
 	}
+	@Override
+	public IPage<SysUser> getUserByDepIds(Page<SysUser> page, List<String> departIds, String username) {
+		return userMapper.getUserByDepIds(page, departIds,username);
+	}
+
+	@Override
+	public Map<String, String> getDepNamesByUserIds(List<String> userIds) {
+		List<SysUserDepVo> list = this.baseMapper.getDepNamesByUserIds(userIds);
+
+		Map<String, String> res = new HashMap<String, String>();
+		list.forEach(item -> {
+				if (res.get(item.getUserId()) == null) {
+					res.put(item.getUserId(), item.getDepartName());
+				} else {
+					res.put(item.getUserId(), res.get(item.getUserId()) + "," + item.getDepartName());
+				}
+			}
+		);
+		return res;
+	}
 
 	@Override
 	public IPage<SysUser> getUserByDepartIdAndQueryWrapper(Page<SysUser> page, String departId, QueryWrapper<SysUser> queryWrapper) {
@@ -335,6 +359,39 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 			return result;
 		}
 		return result;
+	}
+
+	@Override
+	public List<SysUser> queryLogicDeleted() {
+		return this.queryLogicDeleted(null);
+	}
+
+	@Override
+	public List<SysUser> queryLogicDeleted(LambdaQueryWrapper<SysUser> wrapper) {
+		if (wrapper == null) {
+			wrapper = new LambdaQueryWrapper<>();
+		}
+		wrapper.eq(SysUser::getDelFlag, "1");
+		return userMapper.selectLogicDeleted(wrapper);
+	}
+
+	@Override
+	public boolean revertLogicDeleted(List<String> userIds, SysUser updateEntity) {
+		String ids = String.format("'%s'", String.join("','", userIds));
+		return userMapper.revertLogicDeleted(ids, updateEntity) > 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public boolean removeLogicDeleted(List<String> userIds) {
+		String ids = String.format("'%s'", String.join("','", userIds));
+		// 1. 删除用户
+		int line = userMapper.deleteLogicDeleted(ids);
+		// 2. 删除用户部门关系
+		line += sysUserDepartMapper.delete(new LambdaQueryWrapper<SysUserDepart>().in(SysUserDepart::getUserId, userIds));
+		//3. 删除用户角色关系
+		line += sysUserRoleMapper.delete(new LambdaQueryWrapper<SysUserRole>().in(SysUserRole::getUserId, userIds));
+		return line != 0;
 	}
 }
 
