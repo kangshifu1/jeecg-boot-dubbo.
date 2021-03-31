@@ -70,7 +70,7 @@
         <aliyun-java-sdk-dysmsapi.version>1.0.0</aliyun-java-sdk-dysmsapi.version>
         <aliyun.oss.version>3.6.0</aliyun.oss.version>
         <dubbo.version>2.7.5</dubbo.version>
-        <guava.version>26.0-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
     </properties>
     <dependencies>
         <!--集成springmvc框架并实现自动配置 -->
